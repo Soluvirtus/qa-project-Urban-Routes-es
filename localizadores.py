@@ -1,4 +1,11 @@
+"""
+localizadores.py
+
+Este archivo define la clase Localizadores, que contiene todos los elementos de la página web.
+Los localizadores se utilizan en metodos.py para encontrar y manipular elementos en la página.
+"""
 from selenium.webdriver.common.by import By
+
 
 class Localizadores:
     from_field = (By.ID, 'from')
