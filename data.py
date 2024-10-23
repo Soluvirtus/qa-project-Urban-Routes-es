@@ -5,7 +5,7 @@ Este archivo contiene la clase Data con datos estáticos y configuraciones utili
 Almacena información como URLs, direcciones, números de teléfono y datos de tarjetas de crédito.
 """
 class Data:
-    urban_routes_url = 'https://cnt-ee435e23-734e-4bb3-a1f7-ce95b3190b9a.containerhub.tripleten-services.com/?lng=es'
+    urban_routes_url = 'https://cnt-a853dabd-f359-4ec1-8f4e-e6e4c4bb7f2a.containerhub.tripleten-services.com/?lng=es'
     address_from = 'East 2nd Street, 601'
     address_to = '1300 1st St'
     phone_number = '+1 123 123 12 12'
