@@ -1,95 +1,70 @@
-import data
 from selenium import webdriver
-from selenium.webdriver import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-
-
-# no modificar
-def retrieve_phone_code(driver) -> str:
-    """Este código devuelve un número de confirmación de teléfono y lo devuelve como un string.
-    Utilízalo cuando la aplicación espere el código de confirmación para pasarlo a tus pruebas.
-    El código de confirmación del teléfono solo se puede obtener después de haberlo solicitado en la aplicación."""
-
-    import json
-    import time
-    from selenium.common import WebDriverException
-    code = None
-    for i in range(10):
-        try:
-            logs = [log["message"] for log in driver.get_log('performance') if log.get("message")
-                    and 'api/v1/number?number' in log.get("message")]
-            for log in reversed(logs):
-                message_data = json.loads(log)["message"]
-                body = driver.execute_cdp_cmd('Network.getResponseBody',
-                                              {'requestId': message_data["params"]["requestId"]})
-                code = ''.join([x for x in body['body'] if x.isdigit()])
-        except WebDriverException:
-            time.sleep(1)
-            continue
-        if not code:
-            raise Exception("No se encontró el código de confirmación del teléfono.\n"
-                            "Utiliza 'retrieve_phone_code' solo después de haber solicitado el código en tu aplicación.")
-        return code
-
-
-def wait_elements(driver, element, time=6):
-    from selenium.webdriver.support import expected_conditions
-    from selenium.webdriver.support.wait import WebDriverWait
-    WebDriverWait(driver, time).until(expected_conditions.presence_of_element_located(element))
-
-    def wait(waiting_time=10):
-        import time
-        time.sleep(waiting_time)
-
-
-class UrbanRoutesPage:
-    from_field = (By.ID, 'from')
-    to_field = (By.ID, 'to')
-
-    def __init__(self, driver):
-        self.driver = driver
-
-    def set_from(self, from_address):
-        self.driver.find_element(*self.from_field).send_keys(from_address)
-
-    def set_to(self, to_address):
-        self.driver.find_element(*self.to_field).send_keys(to_address)
-
-    def get_from(self):
-        return self.driver.find_element(*self.from_field).get_property('value')
-
-    def get_to(self):
-        return self.driver.find_element(*self.to_field).get_property('value')
-
+from selenium.webdriver.chrome.options import Options
+from metodos import Metodos
+from data import Data
 
 class TestUrbanRoutes:
-
     driver = None
 
     @classmethod
     def setup_class(cls):
-        # no lo modifiques, ya que necesitamos un registro adicional habilitado para recuperar el código de
-        # confirmación del teléfono
-
-        # from selenium.webdriver import DesiredCapabilities
-        #capabilities = DesiredCapabilities.CHROME
-        #capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
-        #cls.driver = webdriver.Chrome(desired_capabilities=capabilities)
-
-        from selenium.webdriver.chrome.options import Options
         options = Options()
         options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
         cls.driver = webdriver.Chrome(options=options)
-        cls.driver.maximize_window()  # Modo de pantalla completa
+        cls.driver.maximize_window()
+
     def test_set_route(self):
-        self.driver.get(data.urban_routes_url)
-        routes_page = UrbanRoutesPage(self.driver)
-        address_from = data.address_from
-        address_to = data.address_to
+        self.driver.get(Data.urban_routes_url)
+        routes_page = Metodos(self.driver)
+        address_from = Data.address_from
+        address_to = Data.address_to
         routes_page.set_route(address_from, address_to)
         assert routes_page.get_from() == address_from
         assert routes_page.get_to() == address_to
+
+    def test_taxi_button(self):
+        routes_page = Metodos(self.driver)
+        routes_page.click_order_taxi_button()
+        assert self.driver.find_element(*Metodos.confort_fee_button).get_property('alt') == "Comfort"
+
+    def test_confort_button(self):
+        routes_page = Metodos(self.driver)
+        routes_page.click_confort_fee_button()
+        element_showed = self.driver.find_element(*Metodos.element_showed)
+        assert element_showed.get_attribute("class") == "r-sw-label"
+
+    def test_fill_phone_number(self):
+        routes_page = Metodos(self.driver)
+        routes_page.fill_phone_fild()
+        assert self.driver.find_element(*Metodos.phone_field).text == Data.phone_number
+
+    def test_add_credit_card(self):
+        routes_page = Metodos(self.driver)
+        routes_page.add_credit_card()
+        assert self.driver.find_element(*Metodos.card_img).get_property('alt') == "card"
+
+    def test_add_driver_comment(self):
+        routes_page = Metodos(self.driver)
+        routes_page.add_driver_comment()
+        assert self.driver.find_element(*Metodos.driver_comment).get_property("value") == Data.message_for_driver
+
+    def test_add_blanket_handkerchiefs(self):
+        routes_page = Metodos(self.driver)
+        routes_page.add_blanket_handkerchiefs()
+        assert self.driver.find_element(*Metodos.blanket_handkerchiefs_input).is_selected()
+
+    def test_add_icecream(self):
+        routes_page = Metodos(self.driver)
+        routes_page.add_icecream()
+        assert self.driver.find_element(*Metodos.icecream_counter_value).text == '2'
+
+    def test_click_taxi_button(self):
+        routes_page = Metodos(self.driver)
+        routes_page.click_taxi_button()
+        assert self.driver.find_element(*Metodos.order_header_title).text == "Buscar automóvil"
+        helpers.wait_elements(self.driver, Metodos.driver_img, 60)
+        assert not self.driver.find_element(*Metodos.order_header_title).text == "Buscar automóvil"
+        assert self.driver.find_element(*Metodos.driver_img).get_property('alt') == "close"
 
     @classmethod
     def teardown_class(cls):
