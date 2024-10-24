@@ -65,7 +65,7 @@ Desde una terminal linux escribe
 Para instalar todas las librerías necesarias.
 Asegúrate de tener pip instalado y ejecuta el siguiente comando:
 
-`sh
+```
 #Clona el repositorio
 git clone https://github.com/Soluvirtus/qa-project-Urban-Routes-es
 
