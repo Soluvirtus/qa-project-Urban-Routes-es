@@ -60,10 +60,21 @@ def test_set_route(self):
 Desde una terminal linux escribe 
 `sudo apt install python3`
 
-### Instalación de Librerías Necesarias
+### Instalación de Librerías Necesarias, clonar repositorio y reproducción de pruebas. 
+
 Para instalar todas las librerías necesarias.
 Asegúrate de tener pip instalado y ejecuta el siguiente comando:
-```
+
+`sh
+#Clona el repositorio
+git clone https://github.com/Soluvirtus/qa-project-Urban-Routes-es
+
+#Instala pytest
+pip install pytest
+
+#Instala selenium
 pip install selenium
-pip install pytest 
-```
+
+#Ejecuta las pruebas
+
+pytest qa-project-Urban-Routes-es/main.py
