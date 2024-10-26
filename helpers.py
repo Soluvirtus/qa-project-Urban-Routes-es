@@ -1,14 +1,23 @@
 """
-codigo.py
+helpers.py
 
 Este archivo contiene funciones auxiliares que se utilizan en múltiples pruebas.
 Incluye funciones para esperar elementos y recuperar códigos de confirmación.
 """
-def retrieve_phone_code(driver) -> str:
-    """Este código devuelve un número de confirmación de teléfono y lo devuelve como un string.
-    Utilízalo cuando la aplicación espere el código de confirmación para pasarlo a tus pruebas.
-    El código de confirmación del teléfono solo se puede obtener después de haberlo solicitado en la aplicación."""
 
+
+def retrieve_phone_code(driver) -> str:
+    """
+    Devuelve un número de confirmación de teléfono y lo devuelve como un string.
+    Utilízalo cuando la aplicación espere el código de confirmación para pasarlo a tus pruebas.
+    El código de confirmación del teléfono solo se puede obtener después de haberlo solicitado en la aplicación.
+
+    Args:
+        driver (WebDriver): El WebDriver de Selenium.
+
+    Returns:
+        str: El código de confirmación del teléfono.
+    """
     import json
     import time
     from selenium.common import WebDriverException
@@ -33,13 +42,13 @@ def retrieve_phone_code(driver) -> str:
 
 def wait_elements(driver, element, time=6):
     """
-        Espera hasta que un elemento esté presente en la página.
+    Espera hasta que un elemento esté presente en la página.
 
-        Args:
-            driver (WebDriver): El WebDriver de Selenium.
-            element (tuple): El localizador del elemento.
-            time (int, opcional): El tiempo máximo de espera en segundos. Por defecto, es 6 segundos.
-        """
+    Args:
+        driver (WebDriver): El WebDriver de Selenium.
+        element (tuple): El localizador del elemento.
+        time (int, opcional): El tiempo máximo de espera en segundos. Por defecto, es 6 segundos.
+    """
     from selenium.webdriver.support import expected_conditions
     from selenium.webdriver.support.wait import WebDriverWait
     WebDriverWait(driver, time).until(expected_conditions.presence_of_element_located(element))
@@ -47,10 +56,10 @@ def wait_elements(driver, element, time=6):
 
 def wait(waiting_time=10):
     """
-       Pausa la ejecución por un tiempo determinado.
+    Pausa la ejecución por un tiempo determinado.
 
-       Args:
-           waiting_time (int, opcional): El tiempo de espera en segundos. Por defecto, es 10 segundos.
-       """
+    Args:
+        waiting_time (int, opcional): El tiempo de espera en segundos. Por defecto, es 10 segundos.
+    """
     import time
     time.sleep(waiting_time)
