@@ -1,5 +1,5 @@
 # Proyecto de Pruebas Automatizadas con Selenium
-_Por Antonio Ávila Martínez_
+_Por Antonio Ávila_
 
 Este proyecto utiliza Selenium y Pytest para realizar pruebas automatizadas de una aplicación web de servicios de taxis privados con nuevas funciones incorporadas. El proyecto está estructurado utilizando el método Page Object Model (POM), lo que facilita el mantenimiento y la escalabilidad de las pruebas.
 
